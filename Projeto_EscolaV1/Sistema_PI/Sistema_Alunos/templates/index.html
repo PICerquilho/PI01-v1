@@ -9,8 +9,6 @@
     <script src="{% static 'js/script.js' %}"></script>
     <link rel="stylesheet" href="{% static 'css/media-query.css' %}">
     <link rel="stylesheet" href="{% static 'css/style.css' %}">
-  
-    
 </head>
 <body>
     <header>
@@ -19,12 +17,44 @@
             <img src="{% static 'imagens/brasao3.png' %}" alt="Imagem do Cabeçalho">
         </div>
     </header>
-    <input type="text" id="busca" placeholder="Digite o nome do aluno">
+
+    <input type="text" id="busca" placeholder="Digite o Nome Social, RA, RG, Série ou Período" oninput="buscarAluno()">
     <button onclick="buscarAluno()">Buscar</button>
+
     <div id="resultados"></div>
 
     <a href="{% url 'cadastro' %}"><button>Cadastrar Aluno</button></a>
 
-    
+    <script>
+        function buscarAluno() {
+            const query = document.getElementById('busca').value;
+
+            // Enviar requisição AJAX para o backend
+            fetch(`/buscar_aluno/?q=${query}`)
+                .then(response => response.json())
+                .then(data => {
+                    const resultadosDiv = document.getElementById('resultados');
+                    resultadosDiv.innerHTML = '';  // Limpar os resultados anteriores
+
+                    if (data.length > 0) {
+                        data.forEach(aluno => {
+                            const div = document.createElement('div');
+                            div.classList.add('aluno');
+                            div.innerHTML = `
+                                <img src="${aluno.foto}" alt="Foto do Aluno" width="50" height="50">
+                                <p><strong>${aluno.nome_social || aluno.nome}</strong> - RA: ${aluno.id_aluno}</p>
+                                <p>Série: ${aluno.serie} - Período: ${aluno.periodo}</p>
+                            `;
+                            resultadosDiv.appendChild(div);
+                        });
+                    } else {
+                        resultadosDiv.innerHTML = '<p>Nenhum aluno encontrado.</p>';
+                    }
+                })
+                .catch(error => {
+                    console.error('Erro ao buscar aluno:', error);
+                });
+        }
+    </script>
 </body>
 </html>
