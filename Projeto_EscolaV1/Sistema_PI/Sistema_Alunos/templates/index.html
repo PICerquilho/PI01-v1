@@ -6,6 +6,10 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Cadastro e consulta de alunos.</title>
     <link rel="shortcut icon" href="{% static 'imagens/brasao.png' %}" type="image/x-icon">
+
+    <!-- Link para o Font Awesome -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/css/all.min.css">
+
     <script src="{% static 'js/script.js' %}"></script>
     <link rel="stylesheet" href="{% static 'css/media-query.css' %}">
     <link rel="stylesheet" href="{% static 'css/style.css' %}">
@@ -16,45 +20,92 @@
         <div class="header-image">
             <img src="{% static 'imagens/brasao3.png' %}" alt="Imagem do Cabeçalho">
         </div>
+        <nav>
+            <div class="nav-buttons">
+                <a href="{% url 'index' %}"><button>🏠 Home</button></a>
+                <a href="{% url 'cadastro' %}">
+                    <button><i class="fas fa-user-plus"></i> Cadastrar Aluno</button>
+                </a>
+                <a href="{% url 'logout' %}"><button>🚪 Logout</button></a>
+            </div>
+        </nav>
     </header>
 
-    <input type="text" id="busca" placeholder="Digite o Nome Social, RA, RG, Série ou Período" oninput="buscarAluno()">
-    <button onclick="buscarAluno()">Buscar</button>
+    <div class="container">
+        <input type="text" id="busca" placeholder="Digite o Nome Social, RA, RG, Série ou Período">
+        <button onclick="buscarAluno()">Buscar</button>
 
-    <div id="resultados"></div>
+        <table id="tabelaAlunos" style="display: none;"> <!-- Tabela inicialmente oculta -->
+            <thead>
+                <tr>
+                    <th>Foto</th>
+                    <th>Nome</th>
+                    <th>RA</th>
+                    <th>Série</th>
+                    <th>Período</th>
+                </tr>
+            </thead>
+            <tbody>
+                <!-- Os alunos serão inseridos aqui via JavaScript -->
+            </tbody>
+        </table>
 
-    <a href="{% url 'cadastro' %}"><button>Cadastrar Aluno</button></a>
+        <!-- Botão Limpar Busca, inicialmente invisível -->
+        <button id="limparBusca" style="display: none;" onclick="limparBusca()">Limpar Busca</button>
+    </div>
 
     <script>
         function buscarAluno() {
-            const query = document.getElementById('busca').value;
+            const query = document.getElementById('busca').value.trim();  // Remove espaços extras
 
             // Enviar requisição AJAX para o backend
             fetch(`/buscar_aluno/?q=${query}`)
                 .then(response => response.json())
                 .then(data => {
-                    const resultadosDiv = document.getElementById('resultados');
-                    resultadosDiv.innerHTML = '';  // Limpar os resultados anteriores
+                    const tabela = document.getElementById('tabelaAlunos').getElementsByTagName('tbody')[0];
+                    tabela.innerHTML = '';  // Limpa a tabela antes de preencher
 
                     if (data.length > 0) {
+                        // Torna a tabela visível ao clicar no botão "Buscar"
+                        document.getElementById('tabelaAlunos').style.display = 'table';
+                        // Exibe o botão "Limpar Busca"
+                        document.getElementById('limparBusca').style.display = 'inline-block';
+
                         data.forEach(aluno => {
-                            const div = document.createElement('div');
-                            div.classList.add('aluno');
-                            div.innerHTML = `
-                                <img src="${aluno.foto}" alt="Foto do Aluno" width="50" height="50">
-                                <p><strong>${aluno.nome_social || aluno.nome}</strong> - RA: ${aluno.id_aluno}</p>
-                                <p>Série: ${aluno.serie} - Período: ${aluno.periodo}</p>
-                            `;
-                            resultadosDiv.appendChild(div);
+                            let row = tabela.insertRow();
+
+                            let cellFoto = row.insertCell(0);
+                            let cellNome = row.insertCell(1);
+                            let cellRA = row.insertCell(2);
+                            let cellSerie = row.insertCell(3);
+                            let cellPeriodo = row.insertCell(4);
+
+                            cellFoto.innerHTML = `<img src="${aluno.foto}" alt="Foto do Aluno" width="50" height="50">`;
+                            cellNome.innerHTML = aluno.nome;
+                            cellRA.innerHTML = aluno.id_aluno;
+                            cellSerie.innerHTML = aluno.serie;
+                            cellPeriodo.innerHTML = aluno.periodo;
                         });
                     } else {
-                        resultadosDiv.innerHTML = '<p>Nenhum aluno encontrado.</p>';
+                        // Caso nenhum aluno seja encontrado, a tabela ficará visível e exibirá uma mensagem
+                        document.getElementById('tabelaAlunos').style.display = 'table';
+                        tabela.innerHTML = '<tr><td colspan="5" style="text-align:center;">Nenhum aluno encontrado.</td></tr>';
+                        // Exibe o botão "Limpar Busca"
+                        document.getElementById('limparBusca').style.display = 'inline-block';
                     }
                 })
                 .catch(error => {
                     console.error('Erro ao buscar aluno:', error);
                 });
         }
+
+        // Função para limpar a busca
+        function limparBusca() {
+            document.getElementById('busca').value = '';  // Limpa o campo de busca
+            document.getElementById('tabelaAlunos').style.display = 'none';  // Esconde a tabela
+            document.getElementById('limparBusca').style.display = 'none';  // Esconde o botão Limpar Busca
+        }
     </script>
+
 </body>
 </html>

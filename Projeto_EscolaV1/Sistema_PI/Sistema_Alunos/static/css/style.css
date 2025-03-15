@@ -101,6 +101,10 @@ button:hover {
     background-color: #0056b3;
 }
 
+button:hover {
+    background-color: #0056b3;
+}
+
 #resultados div {
     border-bottom: 1px solid #eee;
     padding-bottom: 10px;
@@ -127,4 +131,60 @@ img {
 
 .cadastro-box form button, .search-box button {
     width: auto;
+}
+
+nav {
+    position: absolute;
+    top: 10px;
+    right: 20px;
+    z-index: 1000; /* Mantém os botões acima de tudo */
+    display: flex;
+    gap: 10px; /* Espaçamento entre os botões */
+}
+
+nav a {
+    text-decoration: none;
+}
+
+nav button {
+    padding: 10px 15px;
+    font-size: 14px;
+    cursor: pointer;
+    background-color: #007bff;
+    color: white;
+    border: none;
+    border-radius: 5px;
+}
+
+nav button:hover {
+    background-color: #0056b3;
+}
+
+
+header {
+    position: relative;
+    text-align: center;
+    padding: 20px 0; /* Ajusta o espaçamento */
+}
+
+
+table {
+    width: 100%;
+    border-collapse: collapse;
+    margin-top: 10px;
+}
+
+th, td {
+    border: 1px solid #ddd;
+    padding: 8px;
+    text-align: center;
+}
+
+th {
+    background-color: #007bff;
+    color: white;
+}
+
+td img {
+    border-radius: 5px;
 }

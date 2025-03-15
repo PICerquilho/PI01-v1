@@ -20,14 +20,15 @@ from Sistema_Alunos import views
 from Sistema_Alunos.views import login_view, logout_view
 from django.conf import settings
 from django.conf.urls.static import static
-
+from django.contrib.auth import views as auth_views
 urlpatterns = [
     path('admin/', admin.site.urls),
     path('', views.index,name='index'),
     path('cadastro/',views.cadastrar_aluno,name='cadastro'),
     path('buscar_aluno/', views.buscar_aluno, name='buscar_aluno'),
     path('login/', login_view, name='login'),
-    path('logout/', logout_view, name='logout'),    
+    path('logout/', logout_view, name='logout'),
+    path('logout/', auth_views.LogoutView.as_view(next_page='login'), name='logout'),
 ]
 
 urlpatterns += static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)

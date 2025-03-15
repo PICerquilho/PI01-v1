@@ -47,30 +47,31 @@ def cadastrar_aluno(request):
 
 
 def buscar_aluno(request):
-    query = request.GET.get('q', '').strip()  # Pegando o parâmetro de busca
-
+    query = request.GET.get('q', '').strip()
     if query:
         alunos = Aluno.objects.filter(
-            Q(nome__icontains=query) |  # Buscando pelo nome
-            Q(nome_social__icontains=query) |  # Buscando pelo nome social
-            Q(id_aluno__icontains=query) |  # Buscando pelo RA (id_aluno)
-            Q(rg__icontains=query) |  # Buscando pelo RG
-            Q(serie__icontains=query) |  # Buscando pela série
-            Q(periodo__icontains=query)  # Buscando pelo período
-        )
+            nome_social__icontains=query) | Aluno.objects.filter(
+            nome__icontains=query) | Aluno.objects.filter(
+            id_aluno__icontains=query) | Aluno.objects.filter(
+            serie__icontains=query) | Aluno.objects.filter(
+            periodo__icontains=query)
     else:
-        alunos = Aluno.objects.none()  # Caso a query esteja vazia, não retorna nenhum aluno
+        alunos = Aluno.objects.all()
 
-    resultados = []
-    for aluno in alunos:
-        resultados.append({
-            'id': aluno.id,
+    resultado = [
+        {
+            'id_aluno': aluno.id_aluno,
             'nome': aluno.nome,
             'nome_social': aluno.nome_social,
-            'id_aluno': aluno.id_aluno,
-            'foto': aluno.foto.url if aluno.foto else '',
             'serie': aluno.serie,
             'periodo': aluno.periodo,
-        })
+            'foto': aluno.foto.url if aluno.foto else ''
+        }
+        for aluno in alunos
+    ]
+    return JsonResponse(resultado, safe=False)
 
-    return JsonResponse(resultados, safe=False)
+def logout_view(request):
+    messages.warning(request, "Sua sessão expirou por inatividade.")
+    logout(request)
+    return redirect('login')

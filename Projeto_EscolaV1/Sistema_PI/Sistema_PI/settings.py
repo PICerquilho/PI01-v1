@@ -104,9 +104,9 @@ AUTH_PASSWORD_VALIDATORS = [
 # Internationalization
 # https://docs.djangoproject.com/en/5.1/topics/i18n/
 
-LANGUAGE_CODE = 'en-us'
+LANGUAGE_CODE = 'pt-br'
 
-TIME_ZONE = 'UTC'
+TIME_ZONE = 'America/Sao_Paulo'
 
 USE_I18N = True
 
@@ -127,3 +127,10 @@ MEDIA_URL = '/media/'
 MEDIA_ROOT = os.path.join(BASE_DIR, 'media')
 
 LOGIN_URL = '/login/'
+
+# Tempo máximo de sessão inativa (10 minutos)
+SESSION_COOKIE_AGE = 600  # 600 segundos = 10 minutos
+SESSION_SAVE_EVERY_REQUEST = True  # Atualiza a sessão a cada requisição
+SESSION_EXPIRE_AT_BROWSER_CLOSE = True  # Expira a sessão ao fechar o navegador
+
+
