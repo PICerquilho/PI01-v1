@@ -1,4 +1,4 @@
-from django.shortcuts import render,redirect
+from django.shortcuts import render,redirect,get_object_or_404
 from .forms import AlunoForm
 from .models import Aluno
 from django.http import JsonResponse
@@ -48,15 +48,25 @@ def cadastrar_aluno(request):
 
 def buscar_aluno(request):
     query = request.GET.get('q', '').strip()
+    serie = request.GET.get('serie', '').strip()
+    turma = request.GET.get('turma', '').strip()
+    periodo = request.GET.get('periodo', '').strip()
+
+    filtros = Q()
+
     if query:
-        alunos = Aluno.objects.filter(
-            nome_social__icontains=query) | Aluno.objects.filter(
-            nome__icontains=query) | Aluno.objects.filter(
-            id_aluno__icontains=query) | Aluno.objects.filter(
-            serie__icontains=query) | Aluno.objects.filter(
-            periodo__icontains=query)
-    else:
-        alunos = Aluno.objects.all()
+        filtros &= Q(nome__icontains=query) | Q(nome_social__icontains=query) | Q(id_aluno__icontains=query)
+    
+    if serie:
+        filtros &= Q(serie=serie)
+    
+    if turma:
+        filtros &= Q(turma=turma)
+    
+    if periodo:
+        filtros &= Q(periodo=periodo)
+
+    alunos = Aluno.objects.filter(filtros)
 
     resultado = [
         {
@@ -64,14 +74,20 @@ def buscar_aluno(request):
             'nome': aluno.nome,
             'nome_social': aluno.nome_social,
             'serie': aluno.serie,
+            'turma': aluno.turma,
             'periodo': aluno.periodo,
             'foto': aluno.foto.url if aluno.foto else ''
         }
         for aluno in alunos
     ]
+    
     return JsonResponse(resultado, safe=False)
 
 def logout_view(request):
     messages.warning(request, "Sua sessão expirou por inatividade.")
     logout(request)
     return redirect('login')
+
+def detalhes_aluno(request, id_aluno):
+    aluno = get_object_or_404(Aluno, id_aluno=id_aluno)  # Certifique-se que 'id_aluno' é o nome correto
+    return render(request, 'detalhes_aluno.html', {'aluno': aluno})

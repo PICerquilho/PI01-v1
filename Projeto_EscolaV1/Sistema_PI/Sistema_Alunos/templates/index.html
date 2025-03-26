@@ -33,8 +33,31 @@
 
     <div class="container">
         <input type="text" id="busca" placeholder="Digite o Nome Social, RA, RG, Série ou Período">
+        
+        <!-- Filtros adicionais -->
+        <select id="filtroSerie" class="form-control">
+            <option value="">Selecione a Série</option>
+            <option value="1ª Série">1ª Série</option>
+            <option value="2ª Série">2ª Série</option>
+            <option value="3ª Série">3ª Série</option>
+            <option value="4ª Série">4ª Série</option>
+        </select>
+    
+        <select id="filtroTurma" class="form-control">
+            <option value="">Selecione a Turma</option>
+            <option value="A">Turma A</option>
+            <option value="B">Turma B</option>
+            <option value="C">Turma C</option>
+        </select>
+    
+        <select id="filtroPeriodo" class="form-control">
+            <option value="">Selecione o Período</option>
+            <option value="Manhã">Manhã</option>
+            <option value="Tarde">Tarde</option>
+        </select>
+    
         <button onclick="buscarAluno()">Buscar</button>
-
+    
         <table id="tabelaAlunos" style="display: none;"> <!-- Tabela inicialmente oculta -->
             <thead>
                 <tr>
@@ -49,37 +72,45 @@
                 <!-- Os alunos serão inseridos aqui via JavaScript -->
             </tbody>
         </table>
-
+    
         <!-- Botão Limpar Busca, inicialmente invisível -->
         <button id="limparBusca" style="display: none;" onclick="limparBusca()">Limpar Busca</button>
     </div>
 
     <script>
         function buscarAluno() {
-            const query = document.getElementById('busca').value.trim();  // Remove espaços extras
-
+            const query = document.getElementById('busca').value.trim();  // Nome ou RA/RG
+            const serie = document.getElementById('filtroSerie').value;
+            const turma = document.getElementById('filtroTurma').value;
+            const periodo = document.getElementById('filtroPeriodo').value;
+        
             // Enviar requisição AJAX para o backend
-            fetch(`/buscar_aluno/?q=${query}`)
+            fetch(`/buscar_aluno/?q=${query}&serie=${serie}&turma=${turma}&periodo=${periodo}`)
                 .then(response => response.json())
                 .then(data => {
                     const tabela = document.getElementById('tabelaAlunos').getElementsByTagName('tbody')[0];
                     tabela.innerHTML = '';  // Limpa a tabela antes de preencher
-
+        
                     if (data.length > 0) {
                         // Torna a tabela visível ao clicar no botão "Buscar"
                         document.getElementById('tabelaAlunos').style.display = 'table';
                         // Exibe o botão "Limpar Busca"
                         document.getElementById('limparBusca').style.display = 'inline-block';
-
+        
                         data.forEach(aluno => {
                             let row = tabela.insertRow();
-
+        
                             let cellFoto = row.insertCell(0);
                             let cellNome = row.insertCell(1);
                             let cellRA = row.insertCell(2);
                             let cellSerie = row.insertCell(3);
                             let cellPeriodo = row.insertCell(4);
-
+        
+                            // Adiciona um evento de clique na linha para redirecionar para a página de detalhes
+                            row.onclick = function () {
+                                window.location.href = `/detalhes_aluno/${aluno.id_aluno}/`;  // Redireciona para a página de detalhes
+                            };
+        
                             cellFoto.innerHTML = `<img src="${aluno.foto}" alt="Foto do Aluno" width="50" height="50">`;
                             cellNome.innerHTML = aluno.nome;
                             cellRA.innerHTML = aluno.id_aluno;
@@ -98,7 +129,7 @@
                     console.error('Erro ao buscar aluno:', error);
                 });
         }
-
+        
         // Função para limpar a busca
         function limparBusca() {
             document.getElementById('busca').value = '';  // Limpa o campo de busca
