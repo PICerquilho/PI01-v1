@@ -1,5 +1,4 @@
-# Nome do Projeto
-## Descrição do Projeto
+# Painel de Cadastro e Pesquisa de Alunos
 ## Dependências
 * Python 3
 * Django
