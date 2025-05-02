@@ -1,0 +1,133 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="pt-br">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Detalhes do Aluno</title>
+    
+    <style>
+        /* Estilos gerais */
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: Arial, sans-serif;
+        }
+
+        body {
+            background-color: #f4f4f4;
+            color: #333;
+            text-align: center;
+            padding: 20px;
+        }
+
+        /* Cabeçalho */
+        header {
+            background-color: #0044cc;
+            color: white;
+            padding: 20px;
+            border-radius: 10px;
+            margin-bottom: 20px;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+        }
+
+        header h1 {
+            font-size: 24px;
+        }
+
+        .header-image img {
+            height: 50px;
+        }
+
+        /* Container principal */
+        .detalhes-container {
+            background: white;
+            padding: 20px;
+            border-radius: 10px;
+            box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+            max-width: 600px;
+            margin: auto;
+        }
+
+        /* Foto do aluno */
+        .foto-container {
+            text-align: center;
+            margin-bottom: 20px;
+        }
+
+        .foto-aluno {
+            width: 200px;
+            height: 200px;
+            border-radius: 10px;
+            object-fit: cover;
+            border: 3px solid #0044cc;
+        }
+
+        /* Informações do aluno */
+        .informacoes-aluno p {
+            font-size: 18px;
+            margin: 10px 0;
+            text-align: left;
+            padding: 5px;
+            border-bottom: 1px solid #ddd;
+        }
+
+        .informacoes-aluno p strong {
+            color: #0044cc;
+        }
+
+        /* Botão Voltar */
+        .voltar-home {
+            margin-top: 20px;
+        }
+
+        .voltar-home button {
+            background-color: #0044cc;
+            color: white;
+            padding: 10px 20px;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+            font-size: 16px;
+        }
+
+        .voltar-home button:hover {
+            background-color: #003399;
+        }
+    </style>
+</head>
+<body>
+    <header>
+        <h1>Detalhes do Aluno</h1>
+        <div class="header-image">
+            <img src="{% static 'imagens/brasao3.png' %}" alt="Imagem do Cabeçalho">
+        </div>
+    </header>
+
+    <div class="detalhes-container">
+        <div class="foto-container">
+            <img src="{{ aluno.foto.url }}" alt="Foto do Aluno" class="foto-aluno">
+        </div>
+
+        <div class="informacoes-aluno">
+            <p><strong>Nome:</strong> {{ aluno.nome_social}}</p>
+            <p><strong>RA:</strong> {{ aluno.id_aluno }}</p>
+            <p><strong>RG:</strong> {{ aluno.rg }}</p>
+            <p><strong>CPF:</strong> {{ aluno.cpf }}</p>
+            <p><strong>Série:</strong> {{ aluno.serie }}</p>
+            <p><strong>Período:</strong> {{ aluno.periodo }}</p>
+            <p><strong>Data de Nascimento:</strong> {{ aluno.data_nascimento }}</p>
+            <p><strong>Contato:</strong> {{ aluno.contato }}</p>
+            <p><strong>Contato Emergencial:</strong> {{ aluno.contato_emergencial }}</p>
+
+        </div>
+    </div>
+
+    <div class="voltar-home">
+        <a href="{% url 'index' %}"><button>Voltar para a Home</button></a>
+    </div>
+</body>
+</html>
