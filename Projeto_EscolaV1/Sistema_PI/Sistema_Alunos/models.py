@@ -27,7 +27,7 @@ class Aluno(models.Model):
         ('Tarde', 'Tarde'),
     ]
 
-    foto = models.ImageField(upload_to='fotos/', blank=True, null=True)
+    foto = models.ImageField(upload_to='fotos/', default='fotos/default.jpg', blank=False)
     id_aluno = models.CharField(max_length=20, unique=True, blank=True, null=True)
     nome = models.CharField(max_length=100)
     nome_social = models.CharField(max_length=100, blank=True, null=True)
