@@ -15,3 +15,19 @@
 ## Como Executar
 1. Acesse o diretório do projeto
 2. Execute o comando `python3 manage.py runserver`
+
+## Funcionalidades
+📥 Cadastro de alunos com nome, contato, documento, responsável, endereço, observações, série, turma e período
+
+🖼️ Upload obrigatório de foto no cadastro
+
+✏️ Edição e visualização de informações com interface clara
+
+🔍 Busca avançada com filtros dinâmicos
+
+🔐 Controle de acesso por permissões (add, edit, delete)
+
+📂 Organização por série, turma e período
+
+🌐 Interface responsiva e moderna
+
