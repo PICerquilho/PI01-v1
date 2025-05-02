@@ -22,4 +22,9 @@ class AlunoForm(forms.ModelForm):
             'periodo': forms.Select(attrs={'class': 'form-control'}),
             'foto': forms.FileInput(attrs={'class': 'form-control'}),
             'endereco': forms.Textarea(attrs={'class': 'form-control'}),
+            
         }
+    def __init__(self, *args, **kwargs):
+        super().__init__(*args, **kwargs)
+        if not self.instance or not self.instance.pk:
+            self.fields['foto'].required = True

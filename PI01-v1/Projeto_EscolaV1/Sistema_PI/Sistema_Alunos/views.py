@@ -93,7 +93,7 @@ def buscar_aluno(request):
     return JsonResponse(resultado, safe=False)
 
 def logout_view(request):
-    messages.warning(request, "Sua sessão expirou por inatividade.")
+    messages.warning(request,"")
     logout(request)
     return redirect('login')
 
